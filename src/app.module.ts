@@ -38,7 +38,7 @@ const ENTITIES = [
             type: 'postgres' as const,
             url: cfg.get<string>('DATABASE_URL'),
             entities: ENTITIES,
-            synchronize: false,
+            synchronize: cfg.get<string>('DB_SYNCHRONIZE') === 'true',
             migrationsRun: cfg.get<string>('RUN_MIGRATIONS') === 'true',
             migrations: ['dist/migrations/*.js'],
             ssl: cfg.get<string>('DB_SSL') === 'true'
