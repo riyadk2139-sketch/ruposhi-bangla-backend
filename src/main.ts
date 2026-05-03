@@ -1,5 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
+import { DataSource } from 'typeorm';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
@@ -18,6 +19,13 @@ async function bootstrap() {
   }
 
   const app = await NestFactory.create(AppModule);
+
+  if (process.env.DB_SYNCHRONIZE === 'true') {
+    const dataSource = app.get(DataSource);
+    await dataSource.synchronize();
+    console.log('Database schema synchronized.');
+  }
+
   app.setGlobalPrefix('api');
 
   app.enableCors({
