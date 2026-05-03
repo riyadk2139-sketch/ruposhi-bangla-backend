@@ -20,10 +20,13 @@ async function bootstrap() {
 
   const app = await NestFactory.create(AppModule);
 
-  if (process.env.DB_SYNCHRONIZE === 'true') {
+  console.log('DB_SYNCHRONIZE env:', process.env.DB_SYNCHRONIZE);
+  try {
     const dataSource = app.get(DataSource);
     await dataSource.synchronize();
     console.log('Database schema synchronized.');
+  } catch (e) {
+    console.error('Synchronize error:', e.message);
   }
 
   app.setGlobalPrefix('api');
