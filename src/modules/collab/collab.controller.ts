@@ -1,11 +1,11 @@
 import {
-  Controller, Get, Post, Param, Body, UseGuards, Request,
+  Controller, Get, Post, Put, Param, Body, UseGuards, Request,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { CollabService } from './collab.service';
 import {
   CreateCollabGroupDto, JoinGroupDto,
-  CreateCollabExpenseDto, CreatePollDto, VoteDto,
+  CreateCollabExpenseDto, CreatePollDto, VoteDto, UpdateItineraryDto,
 } from './dto/collab.dto';
 
 @Controller('collab')
@@ -46,5 +46,10 @@ export class CollabController {
   @Post(':id/polls/:pollId/vote')
   vote(@Request() req, @Param('id') id: string, @Param('pollId') pollId: string, @Body() dto: VoteDto) {
     return this.collabService.vote(id, pollId, req.user.sub, dto);
+  }
+
+  @Put(':id/itinerary')
+  updateItinerary(@Request() req, @Param('id') id: string, @Body() dto: UpdateItineraryDto) {
+    return this.collabService.updateItinerary(id, req.user.sub, dto);
   }
 }

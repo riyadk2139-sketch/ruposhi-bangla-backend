@@ -9,7 +9,7 @@ import { CollabExpense } from '../../entities/collab-expense.entity';
 import { CollabPoll } from '../../entities/collab-poll.entity';
 import {
   CreateCollabGroupDto, JoinGroupDto,
-  CreateCollabExpenseDto, CreatePollDto, VoteDto,
+  CreateCollabExpenseDto, CreatePollDto, VoteDto, UpdateItineraryDto,
 } from './dto/collab.dto';
 
 @Injectable()
@@ -103,6 +103,15 @@ export class CollabService {
     if (!m) throw new ForbiddenException('Not a member of this group');
   }
 
+  async updateItinerary(groupId: string, userId: string, dto: UpdateItineraryDto) {
+    await this.assertMember(groupId, userId);
+    const group = await this.groupRepo.findOne({ where: { id: groupId } });
+    if (!group) throw new NotFoundException('Group not found');
+    group.itinerary = dto.stops;
+    await this.groupRepo.save(group);
+    return this.findOne(groupId, userId);
+  }
+
   private serialize(group: CollabGroup) {
     return {
       id: group.id,
@@ -117,6 +126,7 @@ export class CollabService {
       })),
       sharedExpenses: group.expenses ?? [],
       polls: group.polls ?? [],
+      itinerary: group.itinerary ?? [],
       createdAt: group.createdAt,
     };
   }

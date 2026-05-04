@@ -34,6 +34,9 @@ export class CollabGroup {
   @OneToMany(() => CollabPoll, (p) => p.group, { cascade: true })
   polls: CollabPoll[];
 
+  @Column({ type: 'simple-json', nullable: true, default: null })
+  itinerary: any[];
+
   @CreateDateColumn()
   createdAt: Date;
 }

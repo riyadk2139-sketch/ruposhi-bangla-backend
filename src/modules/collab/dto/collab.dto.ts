@@ -39,3 +39,8 @@ export class VoteDto {
   @IsString()
   option: string;
 }
+
+export class UpdateItineraryDto {
+  @IsArray()
+  stops: any[];
+}
